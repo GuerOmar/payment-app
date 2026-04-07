@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:flowable="http://flowable.org/bpmn"
+             targetNamespace="Examples">
+
+    <!-- process id="paymentProcess" matches what you call in the Controller -->
+    <process id="paymentProcess" name="Payment Processing Workflow" isExecutable="true">
+
+        <!-- 1. Start Event -->
+        <startEvent id="startEvent" name="Payment Started" />
+
+        <sequenceFlow id="flow1" sourceRef="startEvent" targetRef="paymentTask" />
+
+        <!-- 2. Service Task: Process Payment -->
+        <!-- delegateExpression="${paymentDelegate}" matches the @Component name -->
+        <serviceTask id="paymentTask"
+                     name="Verify Balance and Deduct"
+                     flowable:delegateExpression="${paymentDelegate}" />
+
+        <sequenceFlow id="flow2" sourceRef="paymentTask" targetRef="transactionTask" />
+
+        <!-- 3. Service Task: Create Transaction Record -->
+        <serviceTask id="transactionTask"
+                     name="Create Transaction Record"
+                     flowable:delegateExpression="${transactionDelegate}" />
+
+        <sequenceFlow id="flow3" sourceRef="transactionTask" targetRef="endEvent" />
+
+        <!-- 4. End Event -->
+        <endEvent id="endEvent" name="Payment Finished" />
+
+    </process>
+</definitions>

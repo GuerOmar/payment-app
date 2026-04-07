@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Payment Gateway</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .payment-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 1.5rem;
+            text-align: center;
+            color: var(--text-main);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="number"]:focus {
+            border-color: var(--primary);
+        }
+
+        .method-selector {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 2rem;
+        }
+
+        /* Custom Radio Buttons that look like clickable cards */
+        .method-option {
+            position: relative;
+        }
+
+        .method-option input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .method-label {
+            display: block;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .method-option input:checked + .method-label {
+            border-color: var(--primary);
+            background-color: #eef2ff;
+            color: var(--primary);
+        }
+
+        .method-label:hover {
+            border-color: var(--primary);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        #status {
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .success { color: #059669; }
+        .error { color: #dc2626; }
+    </style>
+</head>
+<body>
+
+<div class="payment-card">
+    <h2>Complete Payment</h2>
+
+    <div class="form-group">
+        <label for="amount">Total Amount (USD)</label>
+        <input type="number" id="amount" value="50.00" step="0.01">
+    </div>
+
+    <label>Select Payment Method</label>
+    <div class="method-selector">
+        <label class="method-option">
+            <input type="radio" name="method" value="CRYPTO" data-id="3" checked>
+            <span class="method-label">₿ Crypto</span>
+        </label>
+        <label class="method-option">
+            <input type="radio" name="method" value="CREDIT_CARD" data-id="1">
+            <span class="method-label">💳 Credit Card</span>
+        </label>
+        <label class="method-option">
+            <input type="radio" name="method" value="PAYPAL" data-id="2">
+            <span class="method-label">🅿️ PayPal</span>
+        </label>
+    </div>
+
+    <button onclick="sendPayment()">Confirm Payment</button>
+    <p id="status"></p>
+</div>
+
+<script>
+    async function sendPayment() {
+        const statusEl = document.getElementById('status');
+        statusEl.innerText = "Processing...";
+        statusEl.className = "";
+
+        const selectedInput = document.querySelector('input[name="method"]:checked');
+
+        const payload = {
+            paymentId: selectedInput.getAttribute('data-id'),
+            paymentAmount: document.getElementById('amount').value,
+            paymentMethodType: selectedInput.value
+        };
+
+        try {
+            const response = await fetch('/api/pay', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.text();
+
+            if(response.ok) {
+                statusEl.innerText = "✅ " + result;
+                statusEl.className = "success";
+            } else {
+                statusEl.innerText = "❌ " + result;
+                statusEl.className = "error";
+            }
+        } catch (err) {
+            statusEl.innerText = "❌ System Error. Check Console.";
+            statusEl.className = "error";
+        }
+    }
+</script>
+
+</body>
+</html>

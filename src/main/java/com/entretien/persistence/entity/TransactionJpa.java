@@ -15,7 +15,6 @@ import java.math.BigDecimal;
 public class TransactionJpa {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @Column

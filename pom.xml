@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>com.entretien</groupId>
-    <artifactId>untitled</artifactId>
+    <artifactId>payment-app</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>

@@ -22,4 +22,8 @@ public class PaymentMethodJpa {
     private BigDecimal balance;
 
     private String type;
+
+    @ManyToOne
+    @JoinColumn(name = "USER_ID", referencedColumnName = "ID")
+    private UserJpa user;
 }

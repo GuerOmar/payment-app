@@ -5,7 +5,7 @@ import com.payment.persistence.entity.PaymentMethodJpa;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = UserMapper.class)
 public interface PaymentMethodMapper {
 
     @Mapping(target = "type", expression = "java(paymentMethod.getType().name())")

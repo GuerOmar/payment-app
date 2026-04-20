@@ -2,22 +2,13 @@ package com.payment.persistence.mapper;
 
 import com.payment.model.Transaction;
 import com.payment.persistence.entity.TransactionJpa;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Component
-public class TransactionMapper {
+@Mapper(componentModel = "spring", uses = PaymentMethodMapper.class)
+public interface TransactionMapper {
 
-    private final PaymentMethodMapper paymentMethodMapper;
+    @Mapping(target = "paymentMethod", source = "paymentMethod")
+    TransactionJpa toEntity(Transaction tx);
 
-    public TransactionMapper(PaymentMethodMapper paymentMethodMapper) {
-        this.paymentMethodMapper = paymentMethodMapper;
-    }
-
-    public TransactionJpa toEntity(Transaction tx) {
-        return TransactionJpa.builder()
-                .id(tx.id())
-                .amount(tx.amount())
-                .paymentMethod(paymentMethodMapper.toEntity(tx.paymentMethod()))
-                .build();
-    }
 }

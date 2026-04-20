@@ -1,28 +1,17 @@
 package com.payment.persistence.mapper;
 
 import com.payment.model.PaymentMethod;
-import com.payment.model.enums.PaymentMethodType;
 import com.payment.persistence.entity.PaymentMethodJpa;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Component
-public class PaymentMethodMapper {
+@Mapper(componentModel = "spring")
+public interface PaymentMethodMapper {
 
-    public PaymentMethodJpa toEntity(PaymentMethod paymentMethod) {
-        return PaymentMethodJpa.builder()
-                .id(paymentMethod.getId())
-                .balance(paymentMethod.getBalance())
-                .type(paymentMethod.getType().name())
-                .build();
-    }
+    @Mapping(target = "type", expression = "java(paymentMethod.getType().name())")
+    PaymentMethodJpa toEntity(PaymentMethod paymentMethod);
 
-    public PaymentMethod toModel(PaymentMethodJpa paymentMethodJpa) {
-        return PaymentMethod.builder()
-                .id(paymentMethodJpa.getId())
-                .balance(paymentMethodJpa.getBalance())
-                .type(PaymentMethodType.findByName(paymentMethodJpa.getType()))
-                .build();
-    }
-
+    @Mapping(target = "type", expression = "java(com.payment.model.enums.PaymentMethodType.findByName(paymentMethodJpa.getType()))")
+    PaymentMethod toModel(PaymentMethodJpa paymentMethodJpa);
 
 }

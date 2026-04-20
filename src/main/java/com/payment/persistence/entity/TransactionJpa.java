@@ -20,7 +20,7 @@ public class TransactionJpa {
     @Column
     private BigDecimal amount;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "PAYMENT_METHOD_ID", referencedColumnName = "ID")
     private PaymentMethodJpa paymentMethod;
 }

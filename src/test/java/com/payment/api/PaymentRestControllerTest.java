@@ -1,6 +1,7 @@
 package com.payment.api;
 
 import com.payment.api.dto.PaymentRequest;
+import com.payment.security.JwtAuthenticationFilter;
 import com.payment.service.payment.PaymentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.flowable.engine.RuntimeService;
@@ -8,6 +9,7 @@ import org.flowable.engine.runtime.ProcessInstance;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -20,6 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(PaymentRestController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class PaymentRestControllerTest {
 
     @Autowired
@@ -33,6 +36,10 @@ class PaymentRestControllerTest {
 
     @MockBean
     private RuntimeService runtimeService;
+
+    @MockBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
 
     @BeforeEach
     void init() {

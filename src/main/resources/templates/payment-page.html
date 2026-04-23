@@ -146,17 +146,19 @@
 
     <label>Select Payment Method</label>
     <div class="method-selector">
-        <label class="method-option">
-            <input type="radio" name="method" value="CRYPTO" data-id="3" checked>
-            <span class="method-label">₿ Crypto</span>
-        </label>
-        <label class="method-option">
-            <input type="radio" name="method" value="CREDIT_CARD" data-id="1">
-            <span class="method-label">💳 Credit Card</span>
-        </label>
-        <label class="method-option">
-            <input type="radio" name="method" value="PAYPAL" data-id="2">
-            <span class="method-label">🅿️ PayPal</span>
+        <label class="method-option" th:each="method, iter : ${paymentMethods}">
+            <input type="radio" name="method"
+                   th:value="${method.type}"
+                   th:attr="data-id=${method.id}"
+                   th:checked="${iter.first}">
+            <span class="method-label">
+                <th:block th:switch="${method.type}">
+                    <th:block th:case="${T(com.payment.model.enums.PaymentMethodType).CRYPTO}">₿ Crypto</th:block>
+                    <th:block th:case="${T(com.payment.model.enums.PaymentMethodType).CREDIT_CARD}">💳 Credit Card</th:block>
+                    <th:block th:case="${T(com.payment.model.enums.PaymentMethodType).PAYPAL}">🅿️ PayPal</th:block>
+                    <th:block th:case="*" th:text="${method.type}"></th:block>
+                </th:block>
+            </span>
         </label>
     </div>
 

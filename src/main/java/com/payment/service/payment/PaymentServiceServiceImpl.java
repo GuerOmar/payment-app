@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -36,5 +37,10 @@ public class PaymentServiceServiceImpl implements PaymentService {
         log.info("Pay with {} <{}> .. {}", paymentMethodType.name(), paymentMethodId,amount);
         paymentMethodAdapter.save(paymentMethod);
         transactionService.createTransaction(amount, paymentMethod);
+    }
+
+    @Override
+    public List<PaymentMethod> findAllByUsername(String username) {
+        return paymentMethodAdapter.findAllByUsername(username);
     }
 }
